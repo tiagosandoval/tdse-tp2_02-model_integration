@@ -1,0 +1,22 @@
+En app.c se declaran las funciones app_init() y app_update()
+
+- app_init()
+
+Comienza mostrando por pantalla que la aplicacion en cuestion ha comenzado. Esto lo hace mediante LOGGER_LOG (para
+mostrar datos por pantalla), GET_NAME (para obtener el nombre de la aplicación) y HAL_GetTick() (obtiene el tick donde
+comienza).
+Luego realiza un ciclo en donde inicializan los x task con sus debidos parámetros. Esto se realiza con un for donde
+que tiene como indice maximo TASK_QTY (constante definida previamente). Para inicializar cada task, se definió un
+tipo de dato llamado task_cfg_t, que es una estructura compuesta por dos punteros a funciones y un puntero a parametros.
+Luego, se define una lista del tipo de dato anterior que posee las inicializaciones, actualizaciones y parametros 
+(en este caso NULL) de los sensores, sistemas y actuadores. En este mismo ciclo, se inicializan las variables.
+Para esto se definió previamente un tipo de dato llamado task_dta_t, que es una estructura que contiene el WCET 
+(worst case execution time). Luego se declara una lista de este tipo de dato y en el ciclo se le asignan los valores al
+arreglo.
+
+cycle_counter_init() ????
+
+- app_update()
+
+Mediante un ciclo, con los mismos tipos de datos anteriores, actualiza los x tasks, a la vez que actualiza los contadores
+y los tiempos de las aplicaciones que se corren.
