@@ -159,7 +159,6 @@ void app_update(void)
 void HAL_SYSTICK_Callback(void)
 {
 	g_app_tick_cnt++;
-
 	g_task_sensor_tick_cnt++;
 	g_task_system_tick_cnt++;
 	g_task_actuator_tick_cnt++;

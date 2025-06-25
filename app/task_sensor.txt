@@ -1,4 +1,52 @@
-  task_sensor.c (task_sensor.h, task_sensor_attribute.h) 
-   Non-Blocking & Update By Time Code -> Sensor Modeling
-  
+Para modificarlo a N sensores (en este caso N = 2), se debe modificar
+
 ...
+const task_sensor_cfg_t task_sensor_cfg_list[] = {
+	{ID_BTN_A,  BTN_A_PORT,  BTN_A_PIN,  BTN_A_PRESSED, DEL_BTN_XX_MAX, EV_SYS_XX_IDLE,  EV_SYS_XX_ACTIVE}
+};
+...
+task_sensor_dta_t task_sensor_dta_list[] = {
+	{DEL_BTN_XX_MIN, ST_BTN_XX_UP, EV_BTN_XX_UP}
+};
+...
+volatile uint32_t g_task_sensor_tick_cnt;
+...
+
+
+por 
+
+...
+const task_sensor_cfg_t task_sensor_cfg_list[] = {
+	{ID_BTN_A,  BTN_A_PORT,  BTN_A_PIN,  BTN_A_PRESSED, DEL_BTN_XX_MAX, EV_SYS_XX_IDLE,  EV_SYS_XX_ACTIVE},
+	{ID_BTN_B,  BTN_B_PORT,  BTN_B_PIN,  BTN_B_PRESSED, DEL_BTN_YY_MAX, EV_SYS_YY_IDLE,  EV_SYS_YY_ACTIVE}
+};
+...
+task_sensor_dta_t task_sensor_dta_list[] = {
+	{DEL_BTN_XX_MIN, ST_BTN_XX_UP, EV_BTN_XX_UP},
+	{DEL_BTN_XX_MIN, ST_BTN_XX_UP, EV_BTN_XX_UP}
+};
+...
+volatile uint32_t g_task_sensor_tick_cnt[SENSOR_CFG_QTY];
+...
+
+
+En app.c también se debe modificar
+...
+g_task_sensor_tick_cnt++;
+...
+
+por 
+
+...
+for (int i = 0; i < SENSOR_CFG_QTY; i++) {
+    g_task_sensor_tick_cnt[i]++;
+}
+...
+
+
+En las primeras dos modificaciones se agrega una fila mas a la lista de sensores para que cada sensor tenga
+su propia configuracion, eventos y estados.
+
+Las ultimas dos modificaciones tienen que ver con diferenciar los ticks para cada sensor. De esta forma, si se
+presionan simultaneamente dos botones, no se acumulan los valores para correcion del debounce, sino que cada
+sensor lo maneja individualmente. 

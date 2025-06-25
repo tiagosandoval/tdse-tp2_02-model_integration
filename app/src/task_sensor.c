@@ -60,16 +60,31 @@
 #define DEL_BTN_XX_MAX				50ul
 
 /********************** internal data declaration ****************************/
+/*
 const task_sensor_cfg_t task_sensor_cfg_list[] = {
 	{ID_BTN_A,  BTN_A_PORT,  BTN_A_PIN,  BTN_A_PRESSED, DEL_BTN_XX_MAX,
 	 EV_SYS_XX_IDLE,  EV_SYS_XX_ACTIVE}
 };
+*/
+const task_sensor_cfg_t task_sensor_cfg_list[] = {
+	{ID_BTN_A,  BTN_A_PORT,  BTN_A_PIN,  BTN_A_PRESSED, DEL_BTN_XX_MAX,
+	 EV_SYS_XX_IDLE,  EV_SYS_XX_ACTIVE},
+	{ID_BTN_B,  BTN_B_PORT,  BTN_B_PIN,  BTN_B_PRESSED, DEL_BTN_XX_MAX,
+	 	 EV_SYS_XX_IDLE,  EV_SYS_XX_ACTIVE}
+};
 
 #define SENSOR_CFG_QTY	(sizeof(task_sensor_cfg_list)/sizeof(task_sensor_cfg_t))
 
+/*
 task_sensor_dta_t task_sensor_dta_list[] = {
 	{DEL_BTN_XX_MIN, ST_BTN_XX_UP, EV_BTN_XX_UP}
 };
+*/
+task_sensor_dta_t task_sensor_dta_list[] = {
+	{DEL_BTN_XX_MIN, ST_BTN_XX_UP, EV_BTN_XX_UP},
+	{DEL_BTN_XX_MIN, ST_BTN_XX_UP, EV_BTN_XX_UP}
+};
+
 
 #define SENSOR_DTA_QTY	(sizeof(task_sensor_dta_list)/sizeof(task_sensor_dta_t))
 
@@ -82,6 +97,7 @@ const char *p_task_sensor_ 		= "Non-Blocking & Update By Time Code";
 /********************** external data declaration ****************************/
 uint32_t g_task_sensor_cnt;
 volatile uint32_t g_task_sensor_tick_cnt;
+
 
 /********************** external functions definition ************************/
 void task_sensor_init(void *parameters)
@@ -115,6 +131,7 @@ void task_sensor_init(void *parameters)
 		LOGGER_LOG("   %s = %lu\r\n", GET_NAME(event), (uint32_t)event);
 	}
 	g_task_sensor_tick_cnt = G_TASK_SEN_TICK_CNT_INI;
+
 }
 
 void task_sensor_update(void *parameters)
@@ -129,7 +146,7 @@ void task_sensor_update(void *parameters)
 
 	/* Protect shared resource (g_task_sensor_tick_cnt) */
 	__asm("CPSID i");	/* disable interrupts*/
-    if (G_TASK_SEN_TICK_CNT_INI < g_task_sensor_tick_cnt)
+	if (G_TASK_SEN_TICK_CNT_INI < g_task_sensor_tick_cnt)
     {
     	g_task_sensor_tick_cnt--;
     	b_time_update_required = true;
@@ -202,6 +219,7 @@ void task_sensor_update(void *parameters)
 						put_event_task_system(p_task_sensor_cfg->signal_up);
 						p_task_sensor_dta->state = ST_BTN_XX_RISING;
 						g_task_sensor_tick_cnt = p_task_sensor_cfg->tick_max;
+
 					}
 					break;
 

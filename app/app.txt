@@ -20,3 +20,44 @@ cycle_counter_init() ????
 
 Mediante un ciclo, con los mismos tipos de datos anteriores, actualiza los x tasks, a la vez que actualiza los contadores
 y los tiempos de las aplicaciones que se corren.
+
+
+
+-------------------
+typedef struct {
+	void (*task_init)(void *);		
+									
+	void (*task_update)(void *);	
+									
+	void *parameters;				
+} task_cfg_t;
+
+--> void (*task_init)(void *)
+	
+	void (*) (void *) significa:
+	puntero a función que recibe un void * como parámetro y no devuelve nada (void)".
+
+
+const task_cfg_t task_cfg_list[] = {
+    {task_sensor_init,   task_sensor_update, NULL},
+    {task_system_init,   task_system_update, NULL},
+    {task_actuator_init, task_actuator_update, NULL}
+};
+
+Es const para que no se pueda modificar luego de compilar. Es un arreglo de estructuras
+de dimension 3 del tipo task_cfg_t. En la primera posicion se llama a la funcion
+task_init, a la funcion task_update y no se llama a parametros (NULL)
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+	
